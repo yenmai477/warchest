@@ -4,7 +4,7 @@ module.exports = {
   rules: {
     'prettier/prettier': 'error',
     'spaced-comment': 'off',
-    'no-console': 'off',
+    'no-console': 'warn',
     'consistent-return': 'off',
     'func-names': 'off',
     'object-shorthand': 'off',
@@ -15,5 +15,8 @@ module.exports = {
     'class-methods-use-this': 'off',
     'prefer-destructuring': ['error', { object: true, array: false }],
     'no-unused-vars': ['error', { argsIgnorePattern: 'req|res|next|val' }],
+  },
+  env: {
+    jest: true,
   },
 };
