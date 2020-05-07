@@ -58,6 +58,7 @@ exports.createProductInfo = async (req, res) => {
     ...productData,
     shopId,
     productId,
+    url,
     site: domain,
   };
 

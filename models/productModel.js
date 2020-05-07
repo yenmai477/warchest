@@ -19,6 +19,10 @@ const productSchema = mongoose.Schema(
     site: {
       type: String,
     },
+    url: {
+      type: String,
+      required: [true, 'A product must have a url'],
+    },
 
     // prices: [
     //   {
