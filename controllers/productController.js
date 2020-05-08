@@ -41,6 +41,7 @@ exports.createProductInfo = async (req, res) => {
   }
 
   //2. If don't have the product , crawl product info data
+
   const productInfo = await getProductInfoFromUrl(url);
 
   // 3. Init price data of product

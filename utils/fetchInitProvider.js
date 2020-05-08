@@ -15,10 +15,10 @@ const initData = async (domain, params) => {
   console.log(`fetch data from ${url}`);
   const json = await fetchContent(url);
   if (!json) return null;
-  const { price_ts: priceTs, price } = json.data.item_history;
   if (json.status === 'error') return [];
 
   // if (priceTs.length === 0 || price.length === 0) return null;
+  const { price_ts: priceTs, price } = json.data.item_history;
 
   //merge two arrays by index
   const priceArr = priceTs.map((time, index) => ({
