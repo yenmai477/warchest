@@ -79,12 +79,18 @@ module.exports = {
       configurable_products: configProducts,
     } = json;
 
+    let { name, thumbnail_url: image } = json;
+
     const currency = 'VND';
 
-    // Find variants of product
-    const variant = configProducts.find(item => item.selected);
+    // 1. If product don't have variants
+    if (configProducts && configProducts.length) {
+      // Find variants of product
+      const variant = configProducts.find(item => item.selected);
 
-    const { name, thumbnail_url: image } = variant;
+      // Update name and image
+      ({ name, thumbnail_url: image } = variant);
+    }
 
     return {
       name,
