@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const path = require('path');
 const productRouter = require('./routes/productRoutes');
+const cronJobRouter = require('./routes/cronjobRoutes');
 
 dotenv.config('.env');
 
@@ -29,5 +30,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/v1/products', productRouter);
+app.use('/api/v1/crons', cronJobRouter);
 
 module.exports = app;

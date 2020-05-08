@@ -60,6 +60,10 @@ const productSchema = mongoose.Schema(
       default: Date.now(),
       select: false,
     },
+    updatedAt: {
+      type: Date,
+      select: false,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -74,6 +78,11 @@ productSchema.virtual('priceTracks', {
   localField: '_id',
 });
 
+productSchema.pre('findOneAndUpdate', function(next) {
+  this._update.updatedAt = Date.now();
+
+  next();
+});
 const Product = mongoose.model('Product', productSchema);
 
 module.exports = Product;

@@ -62,15 +62,17 @@ exports.createProductInfo = async (req, res) => {
     site: domain,
   };
 
-  const newProduct = await Product.create(crawlProduct);
-  console.log('exports.createProductInfo -> newProduct', newProduct);
+  let newProduct = await Product.create(crawlProduct);
 
   // Reference price data to product
   initPrice = initPrice.map(item => ({ ...item, product: newProduct.id }));
 
   const priceProduct = await PriceTrack.create(initPrice);
 
-  // newProduct = { ...newProduct, priceTrack: priceProduct };
+  newProduct = {
+    ...newProduct.toObject(),
+    priceTrack: priceProduct.map(priceItem => priceItem.toObject()),
+  };
   return res.status(201).json({
     status: 'success',
     data: {
