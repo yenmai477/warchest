@@ -22,7 +22,6 @@ module.exports = {
     const { item } = json;
     const { price, itemId, item_status: itemStatus, isHotSale } = item;
     const formatPrice = price / 100000;
-    console.log(item);
     const inventoryStatus = itemStatus === 'normal';
     return {
       price: formatPrice,

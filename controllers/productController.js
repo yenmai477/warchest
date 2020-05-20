@@ -60,7 +60,6 @@ exports.createProductInfo = async (req, res) => {
   const productData = await parseUrlWithConfig(url, config);
 
   const { price } = productData;
-  delete productData.price;
 
   initPrice.push({ price, priceTs: Date.now() });
 

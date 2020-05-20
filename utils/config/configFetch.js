@@ -37,7 +37,6 @@ const getProductInfoFromUrl = async u => {
   const config = loadRules(domain);
 
   const productId = config.productId(u);
-  console.log('productId', productId);
 
   const shopId = config.shopId(u);
 

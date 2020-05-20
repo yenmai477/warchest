@@ -23,31 +23,22 @@ const productSchema = mongoose.Schema(
       type: String,
       required: [true, 'A product must have a url'],
     },
-
-    // prices: [
-    //   {
-    //     priceTs: {
-    //       type: Date,
-    //       default: Date.now(),
-    //     },
-    //     price: {
-    //       type: Number,
-    //       min: [0, `The price of product can't be negative `],
-    //     },
-    //   },
-    // ],
-    // concurrency: {
-    //   type: String,
-    //   default: 'VND',
-    // },
-    // qty: {
-    //   type: Number,
-    //   default: 0,
-    // },
-    // isDeal: {
-    //   type: Boolean,
-    //   default: false,
-    // },
+    price: {
+      type: String,
+      required: [true, 'A product must have a price'],
+    },
+    concurrency: {
+      type: String,
+      default: 'VND',
+    },
+    qty: {
+      type: Number,
+      default: 0,
+    },
+    isDeal: {
+      type: Boolean,
+      default: false,
+    },
     inventoryStatus: {
       type: Boolean,
       default: true,
@@ -79,7 +70,9 @@ productSchema.virtual('priceTracks', {
 });
 
 productSchema.pre('findOneAndUpdate', function(next) {
-  this._update.updatedAt = Date.now();
+  if (this._update) {
+    this._update.updatedAt = Date.now();
+  }
 
   next();
 });
