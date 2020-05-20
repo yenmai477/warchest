@@ -58,11 +58,11 @@ const productSchema = mongoose.Schema(
     createdAt: {
       type: Date,
       default: Date.now(),
-      select: false,
+      // select: false,
     },
     updatedAt: {
       type: Date,
-      select: false,
+      // select: false,
     },
   },
   {

@@ -25,11 +25,21 @@ exports.createProductInfo = async (req, res) => {
   const config = loadRules(domain);
   const productId = config.productId(url);
   const shopId = config.shopId(url);
-  const product = await Product.findOne({
-    productId: productId,
-    shopId: shopId,
+
+  // init query to database
+  const query = {
     site: domain,
-  }).populate('priceTracks');
+  };
+  if (config.required) {
+    if (config.required.indexOf('productId') > -1) {
+      query.productId = productId;
+    }
+    if (config.required.indexOf('shopId') > -1) {
+      query.shopId = shopId;
+    }
+  }
+
+  const product = await Product.findOne(query).populate('priceTracks');
 
   if (product) {
     return res.status(200).json({

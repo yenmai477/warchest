@@ -30,13 +30,16 @@ exports.startPullInfoJob = async (req, res) => {
 exports.startPullProductJob = async (req, res) => {
   let products = await Product.find();
   products = products.map(product => product.toObject());
+  console.log('exports.startPullProductJob -> products', products);
+
   const newPriceList = [];
 
-  await Promise.all(
+  const productList = await Promise.all(
     products.map(async product => {
       const { url, id, site } = product;
       const config = loadRules(site);
       const productData = await parseUrlWithConfig(url, config);
+      console.log(productData);
 
       const { price } = productData;
       delete productData.price;
@@ -44,14 +47,16 @@ exports.startPullProductJob = async (req, res) => {
       newPriceList.push({ price, priceTs: Date.now(), product: id });
 
       return await Product.findByIdAndUpdate(id, productData, {
-        new: true,
+        // new: true,
       });
     })
   );
 
-  await PriceTrack.create(newPriceList);
+  const prices = await PriceTrack.create(newPriceList);
 
   res.status(201).json({
     status: 'success',
+    productList,
+    prices,
   });
 };

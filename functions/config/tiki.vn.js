@@ -22,7 +22,7 @@ module.exports = {
     }
   },
 
-  required: ['productId', 'shopId'],
+  required: ['productId'],
 
   product_api: 'https://tiki.vn/api/v2/products/{product_id}?spid={shop_id}',
 
@@ -31,15 +31,16 @@ module.exports = {
       price,
       is_deal: isDeal,
       qty,
-      product_id: productId,
+      // product_id: productId,
       inventory_status: inventoryStatus,
     } = json;
     const fmStatus = inventoryStatus === 'available';
+
     return {
       price,
       isDeal,
       qty,
-      productId,
+      // productId,
       inventoryStatus: fmStatus,
     };
   },

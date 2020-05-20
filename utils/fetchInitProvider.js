@@ -5,13 +5,22 @@ const DomainId = {
   'shopee.vn': 1,
   'lazada.vn': 2,
   'tiki.vn': 3,
+  'sendo.vn': 4,
 };
 
-// Init link Shopee https://www.beecost.com/san-pham-pbid.1__2348490497__103987827.html
-// Init link tiki https://www.beecost.com/san-pham-pbid.3__28739841__28739851.html
-
 const initData = async (domain, params) => {
-  const url = `https://apiv2.beecost.com/ecom/product/history?product_base_id=${DomainId[domain]}__${params.productId}__${params.shopId}`;
+  const { shopId = 'NULL' } = params;
+  let { productId } = params;
+
+  // Get Real productId from slug sendo
+  if (domain === 'sendo.vn' && productId) {
+    productId = productId.split('-').splice(-1);
+  }
+  let url = `https://apiv2.beecost.com/ecom/product/history?product_base_id=${DomainId[domain]}__${productId}`;
+
+  if (domain !== 'sendo.vn') {
+    url += `__${shopId}`;
+  }
   console.log(`fetch data from ${url}`);
   const json = await fetchContent(url);
   if (!json) return null;

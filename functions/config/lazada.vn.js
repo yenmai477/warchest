@@ -31,7 +31,7 @@ module.exports = {
     const { lowPrice: price } = offers;
     return {
       price,
-      productId: params.productId,
+      // productId: params.productId,
     };
   },
   format_func: json => json,

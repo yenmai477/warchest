@@ -20,13 +20,14 @@ module.exports = {
 
   format_func: json => {
     const { item } = json;
-    const { price, itemId, itemStatus, isHotSale } = item;
+    const { price, itemId, item_status: itemStatus, isHotSale } = item;
     const formatPrice = price / 100000;
+    console.log(item);
     const inventoryStatus = itemStatus === 'normal';
     return {
       price: formatPrice,
       isDeal: isHotSale,
-      product_id: itemId,
+      // productId: itemId,
       inventoryStatus,
     };
   },
