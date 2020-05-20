@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const productRouter = require('./routes/productRoutes');
 const cronJobRouter = require('./routes/cronjobRoutes');
+const userRouter = require('./routes/userRoutes');
+const globalErrorHandler = require('./controllers/errorController');
+const AppError = require('./utils/appError');
 
 dotenv.config('.env');
 
@@ -31,5 +34,14 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1/products', productRouter);
 app.use('/api/v1/crons', cronJobRouter);
+app.use('/api/v1/users', userRouter);
+
+//Check Unhandled Routes
+app.all('*', (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
+//Global Error handler
+app.use(globalErrorHandler);
 
 module.exports = app;
