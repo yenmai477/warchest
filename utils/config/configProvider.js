@@ -1,4 +1,5 @@
 const config = require('../../functions/config/index.config');
+const AppError = require('../appError');
 
 /**
  *  return config for all domain
@@ -15,7 +16,10 @@ const loadRules = domain => {
 
   // TODO: 04/15/20 Handle no rules for domain
   if (!rules) {
-    console.error(`No config rules for ${domain}`);
+    throw new AppError(
+      `Trang web hiện tại chưa hỗ trợ cho trang ${domain}`,
+      400
+    );
   }
   return rules;
 };

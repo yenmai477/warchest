@@ -2,15 +2,15 @@ const Product = require('../models/productModel');
 const PriceTrack = require('../models/priceTrackModel');
 const { getProvider } = require('../utils/urlHelper');
 const { loadRules } = require('../utils/config/configProvider');
+const catchAsync = require('../utils/catchAsync');
 const {
   getProductInfoFromUrl,
   initProductDataFromUrl,
   parseUrlWithConfig,
 } = require('../utils/config/configFetch');
 
-exports.createProduct = async (req, res) => {
+exports.createProduct = catchAsync(async (req, res, next) => {
   const { _id: user, name, email } = req.user;
-  console.log(user);
   //1. Check product is exists in database
   const { url } = req.body;
   const domain = getProvider(url);
@@ -87,4 +87,4 @@ exports.createProduct = async (req, res) => {
       data: newProduct,
     },
   });
-};
+});

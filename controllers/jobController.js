@@ -6,7 +6,9 @@ const {
   parseUrlWithConfig,
 } = require('../utils/config/configFetch');
 
-exports.startPullInfoJob = async (req, res) => {
+const catchAsync = require('../utils/catchAsync');
+
+exports.startPullInfoJob = catchAsync(async (req, res, next) => {
   let products = await Product.find();
   products = products.map(product => product.toObject());
 
@@ -25,9 +27,9 @@ exports.startPullInfoJob = async (req, res) => {
   res.status(201).json({
     status: 'success',
   });
-};
+});
 
-exports.startPullProductJob = async (req, res) => {
+exports.startPullProductJob = catchAsync(async (req, res, next) => {
   let products = await Product.find();
   products = products.map(product => product.toObject());
 
@@ -57,4 +59,4 @@ exports.startPullProductJob = async (req, res) => {
     productList,
     prices,
   });
-};
+});
