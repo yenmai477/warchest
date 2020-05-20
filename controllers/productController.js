@@ -8,17 +8,9 @@ const {
   parseUrlWithConfig,
 } = require('../utils/config/configFetch');
 
-exports.createOne = async (req, res) => {
-  const doc = await Product.create(req.body);
-  res.status(201).json({
-    status: 'success',
-    data: {
-      data: doc,
-    },
-  });
-};
-
-exports.createProductInfo = async (req, res) => {
+exports.createProduct = async (req, res) => {
+  const { _id: user, name, email } = req.user;
+  console.log(user);
   //1. Check product is exists in database
   const { url } = req.body;
   const domain = getProvider(url);
@@ -70,6 +62,7 @@ exports.createProductInfo = async (req, res) => {
     productId,
     url,
     site: domain,
+    user,
   };
 
   let newProduct = await Product.create(crawlProduct);
@@ -81,6 +74,11 @@ exports.createProductInfo = async (req, res) => {
 
   newProduct = {
     ...newProduct.toObject(),
+    user: {
+      _id: user,
+      name,
+      email,
+    },
     priceTrack: priceProduct.map(priceItem => priceItem.toObject()),
   };
   return res.status(201).json({

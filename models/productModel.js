@@ -46,6 +46,11 @@ const productSchema = mongoose.Schema(
     image: {
       type: String,
     },
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      required: [true, 'A product must belong to a user!'],
+    },
     createdAt: {
       type: Date,
       default: Date.now(),
@@ -67,6 +72,14 @@ productSchema.virtual('priceTracks', {
   ref: 'PriceTrack',
   foreignField: 'product',
   localField: '_id',
+});
+
+productSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'user',
+    select: 'name email',
+  });
+  next();
 });
 
 productSchema.pre('findOneAndUpdate', function(next) {
