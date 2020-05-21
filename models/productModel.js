@@ -83,6 +83,7 @@ productSchema.pre(/^find/, function(next) {
 });
 
 productSchema.pre('findOneAndUpdate', function(next) {
+  // console.log('this._update)', this._update);
   if (this._update) {
     this._update.updatedAt = Date.now();
   }
