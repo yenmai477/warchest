@@ -24,8 +24,18 @@ const productSchema = mongoose.Schema(
       required: [true, 'A product must have a url'],
     },
     price: {
-      type: String,
+      type: Number,
       required: [true, 'A product must have a price'],
+    },
+    minPrice: {
+      type: Number,
+    },
+    maxPrice: {
+      type: Number,
+    },
+    avgPrice: {
+      type: Number,
+      set: val => Math.round(val * 100) / 100, // 4.666666, 466.666, 467, 4.67
     },
     concurrency: {
       type: String,
@@ -50,6 +60,10 @@ const productSchema = mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'User',
       required: [true, 'A product must belong to a user!'],
+    },
+    historyRange: {
+      type: String,
+      default: 'Hmm! Có vẻ sản phẩm vừa được thêm vào hệ thống.',
     },
     createdAt: {
       type: Date,
