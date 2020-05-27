@@ -1,7 +1,14 @@
 const moment = require('moment');
 
-const dateDiff = (minDate, maxDate) => {
+const dateDiff = (minDate, maxDate, comment = true) => {
   const diffDuration = moment.duration(moment(maxDate).diff(moment(minDate)));
+  if (!comment) {
+    return {
+      years: diffDuration.years(),
+      months: diffDuration.months(),
+      days: diffDuration.days(),
+    };
+  }
   const years = diffDuration.years() ? `${diffDuration.years()} năm ` : '';
   const months = diffDuration.months() ? `${diffDuration.months()} tháng ` : '';
   const days = diffDuration.days() ? `${diffDuration.days()} ngày` : '';

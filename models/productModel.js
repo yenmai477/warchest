@@ -65,6 +65,10 @@ const productSchema = mongoose.Schema(
       type: String,
       default: 'Hmm! Có vẻ sản phẩm vừa được thêm vào hệ thống.',
     },
+    priceAnalysis: {
+      type: String,
+    },
+    priceLabel: { type: String },
     createdAt: {
       type: Date,
       default: Date.now(),
