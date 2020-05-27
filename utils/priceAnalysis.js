@@ -41,13 +41,14 @@ const addLabelPrice = ({
   currentPrice,
 }) => {
   const { years, months } = dateDiff(minDate, maxDate, false);
-  if ((!years && months < 1) || minPrice === maxDate) return '';
+  if ((!years && months < 1) || minPrice === maxPrice) return null;
   const goodPrice = minPrice * 1.05;
+  const badPrice = 0.95 * maxPrice;
   if (currentPrice === minPrice) return 'Sale xịn';
   if (currentPrice <= goodPrice) {
     return 'Sale tốt';
   }
-  if (currentPrice >= 0.95 * maxPrice) {
+  if (currentPrice >= badPrice) {
     return 'Sale ảo';
   }
 };
