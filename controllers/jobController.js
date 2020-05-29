@@ -1,7 +1,8 @@
+const util = require('util');
 const Product = require('../models/productModel');
 const PriceTrack = require('../models/priceTrackModel');
 const { loadRules } = require('../utils/config/configProvider');
-const { batchOfPromiseAll } = require('../utils/promiseHelper');
+const { runAllPromise } = require('../utils/promiseHelper');
 const {
   getProductInfoFromUrl,
   parseUrlWithConfig,
@@ -9,30 +10,23 @@ const {
 
 const catchAsync = require('../utils/catchAsync');
 
+const sleep = util.promisify(setTimeout);
+// Up một ngày 100 - 200 thằng cũ nhất thôi
 exports.startPullInfoJob = catchAsync(async (req, res, next) => {
-  const count = await Product.countDocuments();
-  const limit = 1000;
-  const page = Math.ceil(count / limit);
-  const pageArr = Array.from(Array(page).keys());
-  const productArr = await batchOfPromiseAll(pageArr, 1, skip =>
-    Product.find()
-      .skip(skip)
-      .limit(limit)
-  );
+  const limit = 100;
+  const products = await Product.find()
+    .sort('updatedAt')
+    .limit(limit);
 
-  await batchOfPromiseAll(productArr, 100, products => {
-    products = products.map(product => product.toObject());
-    return Promise.all(
-      products.map(async product => {
-        const { url, id } = product;
-        const productInfo = await getProductInfoFromUrl(url);
+  await runAllPromise(products, 5, async product => {
+    await sleep(1000);
+    const { url, id } = product;
+    const productInfo = await getProductInfoFromUrl(url);
 
-        return await Product.findByIdAndUpdate(id, productInfo, {
-          new: true,
-          runValidators: true,
-        });
-      })
-    );
+    return await Product.findByIdAndUpdate(id, productInfo, {
+      new: true,
+      runValidators: true,
+    });
   });
 
   res.status(201).json({
@@ -41,51 +35,33 @@ exports.startPullInfoJob = catchAsync(async (req, res, next) => {
 });
 
 exports.startPullProductJob = catchAsync(async (req, res, next) => {
-  const count = await Product.countDocuments();
-  const limit = 1000;
-  const page = Math.ceil(count / limit);
-  const pageArr = Array.from(Array(page).keys());
-  const productArr = await batchOfPromiseAll(pageArr, 1, skip =>
-    Product.find()
-      .skip(skip)
-      .limit(limit)
-  );
+  const limit = 100;
 
-  const updateProducts = await batchOfPromiseAll(
-    productArr,
-    100,
-    async products => {
-      products = products.map(product => product.toObject());
+  const products = await Product.find()
+    .sort('updatedAt')
+    .limit(limit);
 
-      return Promise.all(
-        products.map(async product => {
-          const { url, id, site } = product;
+  const updateProducts = await runAllPromise(products, 5, async product => {
+    await sleep(1000);
+    const { url, id, site } = product;
 
-          const config = loadRules(site);
-          const productData = await parseUrlWithConfig(url, config);
+    const config = loadRules(site);
+    const productData = await parseUrlWithConfig(url, config);
 
-          // newPriceList.push({ price, priceTs: Date.now(), product: id });
+    // newPriceList.push({ price, priceTs: Date.now(), product: id });
 
-          return await Product.findByIdAndUpdate(id, productData, {
-            new: true,
-          });
-        })
-      );
-    }
-  );
+    return await Product.findByIdAndUpdate(id, productData, {
+      new: true,
+    });
+  });
 
-  await batchOfPromiseAll(updateProducts, 100, products => {
-    products = products.map(product => product.toObject());
-    return Promise.all(
-      products.map(async product => {
-        const { id, price } = product;
-        return await PriceTrack.create({
-          price,
-          priceTs: Date.now(),
-          product: id,
-        });
-      })
-    );
+  await runAllPromise(updateProducts, 100, async product => {
+    const { id, price } = product;
+    return await PriceTrack.create({
+      price,
+      priceTs: Date.now(),
+      product: id,
+    });
   });
   // const prices = await PriceTrack.create(newPriceList);
 

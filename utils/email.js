@@ -5,7 +5,7 @@ const htmlToText = require('html-to-text');
 module.exports = class Email {
   constructor(user, url) {
     this.to = user.email;
-    this.firstName = user.name.split(' ')[0];
+    this.firstName = user.name || 'Bạn';
     this.url = url;
     this.from = `YenMai <${process.env.EMAIL_FROM}>`;
   }
@@ -64,5 +64,9 @@ module.exports = class Email {
       'passwordReset',
       'Your password reset token (valid for only 10 minutes)'
     );
+  }
+
+  async sendPriceNofication() {
+    await this.send('nofication', 'Sản phẩm bạn quan tâm đang có giá rất tốt!');
   }
 };

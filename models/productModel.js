@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Nofication = require('./noficationModel');
+const Email = require('../utils/email');
 
 const productSchema = mongoose.Schema(
   {
@@ -76,6 +78,7 @@ const productSchema = mongoose.Schema(
     },
     updatedAt: {
       type: Date,
+      default: Date.now(),
       // select: false,
     },
   },
@@ -108,6 +111,34 @@ productSchema.pre('findOneAndUpdate', function(next) {
 
   next();
 });
+
+const sendPriceNofication = async function(productId, price) {
+  let nofications = await Nofication.find({
+    product: productId,
+    expectedPrice: { $lt: price },
+  }).populate({ path: 'user' });
+  nofications = nofications.map(nofication => nofication.toObject());
+
+  await Promise.all(
+    nofications.map(async nofication => {
+      const { user, product } = nofication;
+      return await new Email(user, product.url).sendPriceNofication();
+    })
+  );
+  await Nofication.updateMany(
+    {
+      product: productId,
+      expectedPrice: { $lt: price },
+    },
+    { $set: { active: false } }
+  );
+};
+
+productSchema.post('findOneAndUpdate', async function(doc) {
+  // Check price is expected price
+  await sendPriceNofication(doc.id, doc.price);
+});
+
 const Product = mongoose.model('Product', productSchema);
 
 module.exports = Product;

@@ -36,8 +36,9 @@ exports.updateOne = Model =>
 
 exports.createOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
-    //trick for  Cart and Wishlist
     if (req.params.id) req.body.user = req.params.id;
+    if (req.user) req.body.user = req.user._id;
+
     let doc = await Model.create(req.body);
 
     if (popOptions) {

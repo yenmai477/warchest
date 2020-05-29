@@ -3,6 +3,7 @@ const PriceTrack = require('../models/priceTrackModel');
 const { getProvider } = require('../utils/urlHelper');
 const { loadRules } = require('../utils/config/configProvider');
 const catchAsync = require('../utils/catchAsync');
+const factory = require('./handleFactory');
 const {
   getProductInfoFromUrl,
   initProductDataFromUrl,
@@ -88,3 +89,8 @@ exports.createProduct = catchAsync(async (req, res, next) => {
     },
   });
 });
+exports.createTest = factory.createOne(Product);
+exports.createTestPrice = factory.createOne(PriceTrack);
+exports.getAllProducts = factory.getAll(Product);
+exports.getProduct = factory.getOne(Product, { path: 'priceTracks' });
+exports.updateProduct = factory.updateOne(Product);

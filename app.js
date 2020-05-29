@@ -14,6 +14,7 @@ const globalErrorHandler = require('./controllers/errorController');
 const userRouter = require('./routes/userRoutes');
 const cronJobRouter = require('./routes/cronjobRoutes');
 const productRouter = require('./routes/productRoutes');
+const noficationRouter = require('./routes/noficationRouter');
 
 dotenv.config('.env');
 
@@ -39,7 +40,7 @@ app.use(helmet());
 
 // Limit requests from same IP
 const limiter = rateLimit({
-  max: 200,
+  max: 2000,
   windowMs: 15 * 60 * 1000,
   handler: (req, res, next) => {
     if (req.rateLimit.remaining <= 0) {
@@ -78,6 +79,7 @@ app.get('/', (req, res) => {
 app.use('/api/v1/products', productRouter);
 app.use('/api/v1/crons', cronJobRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/nofications', noficationRouter);
 
 //Check Unhandled Routes
 app.all('*', (req, res, next) => {

@@ -89,4 +89,5 @@ async function vanillaRunAllPromise(arguments, batchSize, asyncOperation) {
 
 module.exports = {
   batchOfPromiseAll,
+  runAllPromise,
 };
