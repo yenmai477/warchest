@@ -13,7 +13,7 @@ const catchAsync = require('../utils/catchAsync');
 const sleep = util.promisify(setTimeout);
 // Up một ngày 100 - 200 thằng cũ nhất thôi
 exports.startPullInfoJob = catchAsync(async (req, res, next) => {
-  const limit = 100;
+  const limit = 20;
   const products = await Product.find()
     .sort('updatedAt')
     .limit(limit);
@@ -35,7 +35,7 @@ exports.startPullInfoJob = catchAsync(async (req, res, next) => {
 });
 
 exports.startPullProductJob = catchAsync(async (req, res, next) => {
-  const limit = 100;
+  const limit = 10;
 
   const products = await Product.find()
     .sort('updatedAt')
