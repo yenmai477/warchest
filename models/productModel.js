@@ -116,6 +116,7 @@ const sendPriceNofication = async function(productId, price) {
   let nofications = await Nofication.find({
     product: productId,
     expectedPrice: { $lt: price },
+    active: true,
   }).populate({ path: 'user' });
   nofications = nofications.map(nofication => nofication.toObject());
 
