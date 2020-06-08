@@ -29,7 +29,7 @@ exports.startPullInfoJob = catchAsync(async (req, res, next) => {
     });
   });
 
-  res.status(201).json({
+  res.status(200).json({
     status: 'success',
   });
 });
@@ -43,7 +43,8 @@ exports.startPullProductJob = catchAsync(async (req, res, next) => {
 
   const updateProducts = await runAllPromise(products, 5, async product => {
     await sleep(1000);
-    const { url, id, site } = product;
+    const { url, id, site, name } = product;
+    console.log('exports.startPullProductJob -> name', name);
 
     const config = loadRules(site);
     const productData = await parseUrlWithConfig(url, config);
@@ -65,7 +66,7 @@ exports.startPullProductJob = catchAsync(async (req, res, next) => {
   });
   // const prices = await PriceTrack.create(newPriceList);
 
-  res.status(201).json({
+  res.status(200).json({
     status: 'success',
   });
 });
