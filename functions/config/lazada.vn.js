@@ -24,7 +24,9 @@ module.exports = {
     // eslint-disable-next-line no-useless-escape
     const regex = /(?<=\<script type=\"application\/ld\+json"\>)(.*?)(?=\<\/script\>)/g;
 
-    const jsonData = html.match(regex)[0];
+    let jsonData = html.match(regex);
+    if (!jsonData || !jsonData.length) return {};
+    jsonData = jsonData[0];
     const productCrawl = JSON.parse(jsonData);
     const { offers } = productCrawl;
 
