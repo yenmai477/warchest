@@ -44,7 +44,10 @@ exports.startPullProductJob = catchAsync(async (req, res, next) => {
   const updateProducts = await runAllPromise(products, 5, async product => {
     await sleep(1000);
     const { url, id, site, name } = product;
+    console.log('exports.startPullProductJob -> site', site);
+    console.log('exports.startPullProductJob -> url', url);
     console.log('exports.startPullProductJob -> name', name);
+    console.log('--------------------------------------');
 
     const config = loadRules(site);
     const productData = await parseUrlWithConfig(url, config);
