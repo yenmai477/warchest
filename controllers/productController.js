@@ -89,6 +89,52 @@ exports.createProduct = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.aliasSearchProduct = (req, res, next) => {
+  if (!req.query.limit) {
+    req.query.limit = 18;
+  }
+
+  if (req.query.q) {
+    req.query.name = {};
+    req.query.name.regex = req.query.q;
+  }
+
+  if (req.query.minPrice) {
+    req.query.price = {};
+    req.query.price.gt = req.query.minPrice;
+  }
+
+  if (req.query.maxPrice) {
+    if (!req.query.price) {
+      req.query.price = {};
+    }
+    req.query.price.lt = req.query.maxPrice;
+  }
+
+  if (req.query.selectSales) {
+    req.query.priceLabel = {};
+    const selectLabels = `[${req.query.selectLabels}]`;
+    req.query.priceLabel.in = selectLabels;
+  }
+
+  if (req.query.q && req.query.sort) {
+    req.query.sort = `-${req.query.sort}`;
+  }
+
+  if (req.query.selectSites) {
+    req.query.site = {};
+    const selectSites = `[${req.query.selectSites}]`;
+    req.query.site.in = selectSites;
+  }
+  ['q', 'minPrice', 'maxPrice', 'selectSites', 'selectSales'].forEach(item => {
+    if (req.query[item]) {
+      delete req.query[item];
+    }
+  });
+
+  next();
+};
 exports.createTest = factory.createOne(Product);
 exports.createTestPrice = factory.createOne(PriceTrack);
 exports.getAllProducts = factory.getAll(Product);

@@ -2,9 +2,11 @@ class APIFeatures {
   constructor(query, queryString) {
     this.query = query;
     this.queryString = queryString;
+    this.queryObj = {};
+    this.setQueryObject();
   }
 
-  filter() {
+  setQueryObject() {
     const queryObj = { ...this.queryString };
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach(el => delete queryObj[el]);
@@ -18,15 +20,52 @@ class APIFeatures {
     );
 
     const query = JSON.parse(queryStr);
+
+    if (query.name && query.name.$regex) {
+      query.name.$options = 'i';
+    }
+
     Object.keys(query).forEach(key => {
       if (query[key].$in) {
         const inData = queryStr.match(/(?<=\[).+?(?=\])/g)[0];
         query[key].$in = inData.split(',');
       }
     });
+    this.queryObj = query;
+  }
 
-    this.query = this.query.find(query);
+  filter() {
+    // const queryObj = { ...this.queryString };
+    // const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    // excludedFields.forEach(el => delete queryObj[el]);
 
+    // // 1B) Advanced filtering
+
+    // let queryStr = JSON.stringify(queryObj);
+    // queryStr = queryStr.replace(
+    //   /\b(gte|gt|lte|lt|in|regex)\b/g,
+    //   match => `$${match}`
+    // );
+
+    // const query = JSON.parse(queryStr);
+
+    // if (query.name && query.name.$regex) {
+    //   query.name.$options = 'i';
+    // }
+
+    // Object.keys(query).forEach(key => {
+    //   if (query[key].$in) {
+    //     const inData = queryStr.match(/(?<=\[).+?(?=\])/g)[0];
+    //     query[key].$in = inData.split(',');
+    //   }
+    // });
+
+    this.query = this.query.find(this.queryObj);
+    return this;
+  }
+
+  getTotalDocs() {
+    this.query = this.query.countDocuments(this.queryObj);
     return this;
   }
 

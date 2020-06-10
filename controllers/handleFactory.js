@@ -75,7 +75,11 @@ exports.getAll = Model =>
     // To allow for nested GET
     // const filter = {};
 
-    const features = new APIFeatures(Model.find(), req.query)
+    const getTotalDocs = new APIFeatures(Model, req.query).getTotalDocs();
+
+    const total = await getTotalDocs.query;
+
+    const features = new APIFeatures(Model, req.query)
       .filter()
       .sort()
       .limitFields()
@@ -86,6 +90,7 @@ exports.getAll = Model =>
     // SEND RESPONSE
     res.status(200).json({
       status: 'success',
+      total,
       results: doc.length,
       data: {
         data: doc,

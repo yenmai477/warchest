@@ -9,7 +9,7 @@ router.use(authController.protect);
 
 router
   .route('/')
-  .get(productController.getAllProducts)
+  .get(productController.aliasSearchProduct, productController.getAllProducts)
   .post(productController.createProduct);
 
 router.route('/test').post(productController.createTest);
