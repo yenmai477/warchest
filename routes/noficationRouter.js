@@ -12,4 +12,12 @@ router
   .get(noficationController.getAllNofication)
   .post(noficationController.createNofication);
 
+router
+  .route('/:id')
+  .get(noficationController.createNofication)
+  .patch(noficationController.updateNofication)
+  .delete(noficationController.deleteNofication);
+
+router.route('/product/:product').get(noficationController.getAllNofication);
+
 module.exports = router;

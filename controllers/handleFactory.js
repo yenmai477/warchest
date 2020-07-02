@@ -73,13 +73,21 @@ exports.getOne = (Model, popOptions) =>
 exports.getAll = Model =>
   catchAsync(async (req, res, next) => {
     // To allow for nested GET
-    // const filter = {};
+    let filter = {};
+    // trick for find nofication for user
+    const { product, user } = req.params;
+    if (product) filter = { ...filter, product, user: `${req.user._id}` };
 
-    const getTotalDocs = new APIFeatures(Model, req.query).getTotalDocs();
+    if (user) filter = { ...filter, user };
+
+    const getTotalDocs = new APIFeatures(
+      Model.find(filter),
+      req.query
+    ).getTotalDocs();
 
     const total = await getTotalDocs.query;
 
-    const features = new APIFeatures(Model, req.query)
+    const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .sort()
       .limitFields()
