@@ -49,6 +49,14 @@ const noficationSchema = mongoose.Schema(
   }
 );
 
+noficationSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'product',
+    select: 'price name',
+  });
+  next();
+});
+
 const Nofication = mongoose.model('Nofication', noficationSchema);
 
 module.exports = Nofication;
