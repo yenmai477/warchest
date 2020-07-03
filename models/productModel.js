@@ -113,23 +113,26 @@ productSchema.pre('findOneAndUpdate', function(next) {
 });
 
 const sendPriceNofication = async function(productId, price) {
+  console.log('price', price);
   let nofications = await Nofication.find({
     product: productId,
-    expectedPrice: { $lt: price },
+    expectedPrice: { $gt: price },
     active: true,
   }).populate({ path: 'user' });
   nofications = nofications.map(nofication => nofication.toObject());
+  console.log('nofications', nofications);
 
   await Promise.all(
     nofications.map(async nofication => {
       const { user, product } = nofication;
-      return await new Email(user, product.url).sendPriceNofication();
+      const url = `${process.env.CLIENT_URL}/app/products/${product}`;
+      return await new Email(user, url).sendPriceNofication();
     })
   );
   await Nofication.updateMany(
     {
       product: productId,
-      expectedPrice: { $lt: price },
+      expectedPrice: { $gt: price },
     },
     { $set: { active: false } }
   );

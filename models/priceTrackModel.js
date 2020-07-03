@@ -60,14 +60,19 @@ priceTrackSchema.statics.priceAnalysisHandle = async function(
     const priceAnalysis = priceComment({ ...stats[0], currentPrice });
     // TODO: 05/27/20 Gắn thẻ good best price
     const priceLabel = addLabelPrice({ ...stats[0], currentPrice });
-    await Product.findByIdAndUpdate(productId, {
-      historyRange,
-      priceAnalysis,
-      minPrice,
-      maxPrice,
-      avgPrice,
-      priceLabel,
-    });
+    await Product.findByIdAndUpdate(
+      productId,
+      {
+        historyRange,
+        priceAnalysis,
+        minPrice,
+        maxPrice,
+        avgPrice,
+        priceLabel,
+        price: currentPrice,
+      },
+      { new: true }
+    );
   }
 };
 

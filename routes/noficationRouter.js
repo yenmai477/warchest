@@ -14,7 +14,7 @@ router
 
 router
   .route('/:id')
-  .get(noficationController.createNofication)
+  .get(noficationController.getNofication)
   .patch(noficationController.updateNofication)
   .delete(noficationController.deleteNofication);
 
