@@ -52,7 +52,7 @@ const noficationSchema = mongoose.Schema(
 noficationSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'product',
-    select: 'price name image, site',
+    select: 'price name image site',
   });
   next();
 });
