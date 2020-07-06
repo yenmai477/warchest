@@ -25,7 +25,7 @@ module.exports = {
 
   format_func: json => {
     const { data: item } = json.result;
-    const { price, url_key: itemId, quantity } = item;
+    const { final_price: price, url_key: itemId, quantity } = item;
 
     const inventoryStatus = !!quantity;
     return {
