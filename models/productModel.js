@@ -43,18 +43,18 @@ const productSchema = mongoose.Schema(
       type: String,
       default: 'VND',
     },
-    qty: {
-      type: Number,
-      default: 0,
-    },
-    isDeal: {
-      type: Boolean,
-      default: false,
-    },
-    inventoryStatus: {
-      type: Boolean,
-      default: true,
-    },
+    // qty: {
+    //   type: Number,
+    //   default: 0,
+    // },
+    // isDeal: {
+    //   type: Boolean,
+    //   default: false,
+    // },
+    // inventoryStatus: {
+    //   type: Boolean,
+    //   default: true,
+    // },
     image: {
       type: String,
     },

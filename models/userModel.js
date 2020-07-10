@@ -6,37 +6,37 @@ const crypto = require('crypto');
 const userSchema = mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Please tell us your name!'],
+    required: [true, 'Vui lòng nhập tên của bạn!'],
   },
   email: {
     type: String,
-    required: [true, 'Please provide your email'],
+    required: [true, 'Vui lòng nhập email!'],
     unique: true,
     lowercase: true,
     trim: true,
-    validate: [validator.isEmail, 'Please provide a valid email'],
+    validate: [validator.isEmail, 'Vui lòng cung cấp địa chỉ email hợp lệ'],
   },
   password: {
     type: String,
-    required: [true, 'Please provide a password'],
+    required: [true, 'Vui lòng nhập mật khẩu!'],
     validate: {
       validator: function(password) {
         return password.length >= 8;
       },
-      message: 'Password are not shorter than 8 characters.',
+      message: 'Mật khẩu phải dài tối thiểu 8 ký tự.',
     },
     trim: true,
     select: false,
   },
   passwordConfirm: {
     type: String,
-    required: [true, 'Please confirm your password'],
+    required: [true, 'Vui lòng xác nhập xác nhận mật khẩu'],
     validate: {
       // This only works on CREATE and SAVE!!!
       validator: function(el) {
         return el === this.password;
       },
-      message: 'Passwords are not the same!',
+      message: 'Mật khẩu không trùng khớp! Vui lòng thử lại.',
     },
   },
   role: {
