@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Nofication = require('./noficationModel');
 const Email = require('../utils/email');
+const webpush = require('../utils/webPush');
 
 const productSchema = mongoose.Schema(
   {
@@ -113,19 +114,42 @@ productSchema.pre('findOneAndUpdate', function(next) {
 });
 
 const sendPriceNofication = async function(productId, price) {
-  console.log('price', price);
   let nofications = await Nofication.find({
     product: productId,
     expectedPrice: { $gt: price },
     active: true,
   }).populate({ path: 'user' });
   nofications = nofications.map(nofication => nofication.toObject());
-  console.log('nofications', nofications);
+
+  const pushNofications = nofications.filter(
+    nofication => nofication.pushNofication === true
+  );
+  console.log(pushNofications);
+  await Promise.all(
+    pushNofications.map(async nofication => {
+      const { product, noficationId } = nofication;
+      const url = `${process.env.CLIENT_URL}/app/products/${product._id}`;
+      webpush
+        .sendNotification(
+          JSON.parse(noficationId),
+          JSON.stringify({
+            title: 'ĐỪNG BỎ LỠ!!',
+            text: `${product.name} đang có giá như bạn mong muốn. Xem ngay thôi nào!`,
+            image: `${product.image}`,
+            tag: 'good-price',
+            url,
+          })
+        )
+        .catch(err => {
+          console.log(err);
+        });
+    })
+  );
 
   await Promise.all(
     nofications.map(async nofication => {
       const { user, product } = nofication;
-      const url = `${process.env.CLIENT_URL}/app/products/${product}`;
+      const url = `${process.env.CLIENT_URL}/app/products/${product._id}`;
       return await new Email(user, url).sendPriceNofication();
     })
   );
