@@ -95,8 +95,6 @@ exports.aliasSearchProduct = (req, res, next) => {
     req.query.limit = 18;
   }
 
-  console.log(req.query);
-
   if (req.query.q) {
     req.query.name = {};
     req.query.name.regex = req.query.q;
