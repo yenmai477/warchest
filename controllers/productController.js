@@ -95,6 +95,8 @@ exports.aliasSearchProduct = (req, res, next) => {
     req.query.limit = 18;
   }
 
+  console.log(req.query);
+
   if (req.query.q) {
     req.query.name = {};
     req.query.name.regex = req.query.q;
@@ -114,7 +116,7 @@ exports.aliasSearchProduct = (req, res, next) => {
 
   if (req.query.selectSales) {
     req.query.priceLabel = {};
-    const selectLabels = `[${req.query.selectLabels}]`;
+    const selectLabels = `[${req.query.selectSales}]`;
     req.query.priceLabel.in = selectLabels;
   }
 
