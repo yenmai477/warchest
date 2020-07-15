@@ -56,13 +56,13 @@ module.exports = class Email {
   }
 
   async sendWelcome() {
-    await this.send('welcome', `Welcome to the Warchest Family!`);
+    await this.send('welcome', `Chào mừng đến với Warchest!`);
   }
 
   async sendPasswordReset() {
     await this.send(
       'passwordReset',
-      'Your password reset token (valid for only 10 minutes)'
+      'Mã xác thực khôi phục mật khẩu (Hiệu lực trong 10 phút)'
     );
   }
 
