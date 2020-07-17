@@ -23,7 +23,7 @@ const userSchema = mongoose.Schema({
       validator: function(password) {
         return password.length >= 8;
       },
-      message: 'Mật khẩu phải dài tối thiểu 8 ký tự.',
+      message: 'Mật khẩu phải dài tối thiểu 8 ký tự',
     },
     trim: true,
     select: false,
