@@ -48,7 +48,7 @@ const noficationSchema = mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-
+noficationSchema.index({ product: 1, user: 1 }, { unique: true });
 noficationSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'product',
