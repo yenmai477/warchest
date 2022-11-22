@@ -49,7 +49,7 @@
     "moment": "^2.29.4",
     "mongoose": "^5.7.5",
     "nodemailer": "^6.3.0",
-    "npm": "^6.14.6",
+    "npm": "^6.14.17",
     "pug": "^2.0.4",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
